@@ -39,6 +39,19 @@ List of commands this console current supports:
 * `all` - Prints all string representation of all instances based or not on the class name. 
 * `update` - Updates an instance based on the class name and id by adding or updating attribute (save the change into the JSON file). 
 
+#### Commands
+----
+Commands | Description | Usage
+-------- | ----------- |-------- |
+**help** or **?**| Displays the documented commands. | **help**
+**quit**     | Exits the program. | **quit**
+**EOF**      | Ends the program. Used when files are passed into the program. | N/A
+**create**  | Creates a new instance of the \<class_name\>. Creates a Json file with the object representation. and prints the id of created object. | **create** \<class_name\>
+**show**    | Prints the string representation of an instance based on the class name and id. | **show** \<class_name class_id\>
+**destroy** | Deletes and instance base on the class name and id. | **destroy** \<class_name class_id\>
+**all** | Prints all string representation of all instances based or not on the class name | **all** or **all** \<class_name class_id\>
+**update** | Updates an instance based on the class name and id by adding or updating attribute | **update** \<class_name class_id key value\>
+----
 #### `models/` directory contains classes used for this project:
 [base_model.py](/models/base_model.py) - The BaseModel class from which future classes will be derived
 * `def __init__(self, *args, **kwargs)` - Initialization of the base model
@@ -156,6 +169,8 @@ No known bugs at this time.
 ## Authors
 Alexa Orrico - [Github](https://github.com/alexaorrico) / [Twitter](https://twitter.com/alexa_orrico)  
 Jennifer Huang - [Github](https://github.com/jhuang10123) / [Twitter](https://twitter.com/earthtojhuang)
+
+Ngoni19 <a href = "https://wa.me/+263776264077"><img src="https://img.icons8.com/fluent/48/000000/whatsapp.png"></a>
 
 Second part of Airbnb: Joann Vuong
 ## License
