@@ -1,19 +1,18 @@
 #!/usr/bin/python3
 '''
-    unnit Testing the file_storage module.
+    Testing the file_storage module.
 '''
 import time
 import unittest
 import sys
-from models.engine.db_storage from io import StringIO
-import DBStorage
+from models.engine.db_storage import DBStorage
 from models import storage
 from models.user import User
 from models.state import State
 from models import storage
 from console import HBNBCommand
 from os import getenv
-
+from io import StringIO
 
 db = getenv("HBNB_TYPE_STORAGE")
 
@@ -21,12 +20,12 @@ db = getenv("HBNB_TYPE_STORAGE")
 @unittest.skipIf(db != 'db', "Testing DBstorage only")
 class test_DBStorage(unittest.TestCase):
     '''
-        Testing the DB_Storage classess
+        Testing the DB_Storage class
     '''
     @classmethod
     def setUpClass(cls):
         '''
-            Init classes
+            Initializing classes
         '''
         cls.dbstorage = DBStorage()
         cls.output = StringIO()
@@ -35,14 +34,14 @@ class test_DBStorage(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         '''
-            delete val
+            delete variables
         '''
         del cls.dbstorage
         del cls.output
 
     def create(self):
         '''
-            Create HBNBCommand() line :
+            Create HBNBCommand()
         '''
         return HBNBCommand()
 
@@ -57,8 +56,8 @@ class test_DBStorage(unittest.TestCase):
         '''
             Testing User attributes
         '''
-        new = User(email="ngoni19@live.com", password="ALX!")
-        self.assertTrue(new.email, "ngoni19@live.com")
+        new = User(email="melissa@hbtn.com", password="hello")
+        self.assertTrue(new.email, "melissa@hbtn.com")
 
     def test_dbstorage_check_method(self):
         '''
@@ -73,13 +72,13 @@ class test_DBStorage(unittest.TestCase):
 
     def test_dbstorage_all(self):
         '''
-            Testing for all function
+            Testing all function
         '''
         storage.reload()
         result = storage.all("")
         self.assertIsInstance(result, dict)
         self.assertEqual(len(result), 0)
-        new = User(email="toronto@gmail.com", password="yeah!")
+        new = User(email="adriel@hbtn.com", password="abc")
         console = self.create()
         console.onecmd("create State name=California")
         result = storage.all("State")
@@ -94,8 +93,8 @@ class test_DBStorage(unittest.TestCase):
         save_id = new_state.id
         result = storage.all("State")
         temp_list = []
-        for x, v in result.items():
-            temp_list.append(x.split('.')[1])
+        for k, v in result.items():
+            temp_list.append(k.split('.')[1])
             obj = v
         self.assertTrue(save_id in temp_list)
         self.assertIsInstance(obj, State)
@@ -104,8 +103,8 @@ class test_DBStorage(unittest.TestCase):
         '''
             Testing delete method
         '''
-        new_user = User(email="alxo@gmail.com", password="getme!",
-                        first_name="Breezy", last_name="Tolentino")
+        new_user = User(email="haha@hehe.com", password="abc",
+                        first_name="Adriel", last_name="Tolentino")
         storage.new(new_user)
         save_id = new_user.id
         key = "User.{}".format(save_id)
@@ -119,9 +118,17 @@ class test_DBStorage(unittest.TestCase):
 
     def test_model_storage(self):
         '''
-            Test to check if storage --> an instance for DBStorage
+            Test to check if storage is an instance for DBStorage
         '''
         self.assertTrue(isinstance(storage, DBStorage))
+
+    def test_db_storage_get(self):
+        '''
+            Check if instance gotten for DBStorage
+        '''
+        new_o = State(name="Cali")
+        obj = storage.get("State", "fake_id")
+        self.assertIsNone(obj)
 
     def test_db_storage_count(self):
         '''
@@ -133,11 +140,3 @@ class test_DBStorage(unittest.TestCase):
         cls_count = storage.count("State")
         self.assertIsInstance(cls_count, int)
         self.assertGreaterEqual(all_count, cls_count)
-
-    def test_db_storage_get(self):
-        '''
-            Check if instance gotten for DBStorage
-        '''
-        new_o = State(name="Cali")
-        obj = storage.get("State", "fake_id")
-        self.assertIsNone(obj)

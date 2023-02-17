@@ -13,14 +13,14 @@ from models.base_model import Base
 
 class DBStorage:
     '''
-        Create the SQLalchemy database
+        Create SQLalchemy database
     '''
     __engine = None
     __session = None
 
     def __init__(self):
         '''
-            Create--> Engine && link to MySQL databse
+            Create engine and link to MySQL databse (hbnb_dev, hbnb_dev_db)
         '''
         user = getenv("HBNB_MYSQL_USER")
         pwd = getenv("HBNB_MYSQL_PWD")
@@ -34,26 +34,26 @@ class DBStorage:
 
     def all(self, cls=None):
         '''
-             Database session --> Query
+            Query current database session
         '''
-        data_dic = {}
+        db_dict = {}
 
         if cls != "":
-            obj01 = self.__session.query(models.classes[cls]).all()
-            for obj in obj01:
+            objs = self.__session.query(models.classes[cls]).all()
+            for obj in objs:
                 key = "{}.{}".format(obj.__class__.__name__, obj.id)
-                data_dic[key] = obj
-            return data_dic
+                db_dict[key] = obj
+            return db_dict
         else:
-            for x, v in models.classes.items():
-                if x != "BaseModel":
-                    obj01 = self.__session.query(v).all()
-                    if len(obj01) > 0:
-                        for obj in obj01:
+            for k, v in models.classes.items():
+                if k != "BaseModel":
+                    objs = self.__session.query(v).all()
+                    if len(objs) > 0:
+                        for obj in objs:
                             key = "{}.{}".format(obj.__class__.__name__,
                                                  obj.id)
-                            data_dic[key] = obj
-            return data_dic
+                            db_dict[key] = obj
+            return db_dict
 
     def new(self, obj):
         '''
@@ -63,20 +63,20 @@ class DBStorage:
 
     def save(self):
         '''
-            current database session-->Commit changes
+            Commit all changes of current database session
         '''
         self.__session.commit()
 
     def delete(self, obj=None):
         '''
-            Delete from current db session
+            Delete from current database session
         '''
         if obj is not None:
             self.__session.delete(obj)
 
     def reload(self):
         '''
-            current database session --> Commit changes
+            Commit all changes of current database session
         '''
         self.__session = Base.metadata.create_all(self.__engine)
         factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
@@ -85,18 +85,18 @@ class DBStorage:
 
     def close(self):
         '''
-            Get rid of private session attri
+            Remove private session attribute
         '''
         self.__session.close()
 
     def get(self, cls, id):
         '''
-             name & id --> Retrieve obj w/class
+            Retrieve an obj w/class name and id
         '''
         result = None
         try:
-            obj01 = self.__session.query(models.classes[cls]).all()
-            for obj in obj01:
+            objs = self.__session.query(models.classes[cls]).all()
+            for obj in objs:
                 if obj.id == id:
                     result = obj
         except BaseException:
@@ -110,11 +110,11 @@ class DBStorage:
         cls_counter = 0
 
         if cls is not None:
-            obj01 = self.__session.query(models.classes[cls]).all()
-            cls_counter = len(obj01)
+            objs = self.__session.query(models.classes[cls]).all()
+            cls_counter = len(objs)
         else:
-            for x, v in models.classes.items():
-                if x != "BaseModel":
-                    obj01 = self.__session.query(models.classes[x]).all()
-                    cls_counter += len(obj01)
+            for k, v in models.classes.items():
+                if k != "BaseModel":
+                    objs = self.__session.query(models.classes[k]).all()
+                    cls_counter += len(objs)
         return cls_counter

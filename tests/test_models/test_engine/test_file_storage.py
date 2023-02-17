@@ -19,12 +19,12 @@ db = os.getenv("HBNB_TYPE_STORAGE")
 @unittest.skipIf(db == 'db', "Testing DBstorage only")
 class testFileStorage(unittest.TestCase):
     '''
-        Testin---> FileStorage class
+        Testing the FileStorage class
     '''
 
     def setUp(self):
         '''
-            Init classes
+            Initializing classes
         '''
         self.storage = FileStorage()
         self.my_model = BaseModel()
@@ -41,14 +41,15 @@ class testFileStorage(unittest.TestCase):
 
     def test_all_return_type(self):
         '''
-            Tests data type;return value of the all method.
+            Tests the data type of the return value of the all method.
         '''
         storage_all = self.storage.all()
         self.assertIsInstance(storage_all, dict)
 
     def test_new_method(self):
         '''
-            Tests --> new method 
+            Tests that the new method sets the right key and value pair
+            in the FileStorage.__object attribute
         '''
         self.storage.new(self.my_model)
         key = str(self.my_model.__class__.__name__ + "." + self.my_model.id)
@@ -56,7 +57,7 @@ class testFileStorage(unittest.TestCase):
 
     def test_objects_value_type(self):
         '''
-            Tests--> type of value contained in the FileStorage.__object
+            Tests that the type of value contained in the FileStorage.__object
             is of type obj.__class__.__name__
         '''
         self.storage.new(self.my_model)
@@ -73,7 +74,7 @@ class testFileStorage(unittest.TestCase):
 
     def test_save_file_read(self):
         '''
-            Testing contents of the files inside the file.json
+            Testing the contents of the files inside the file.json
         '''
         self.storage.save()
         self.storage.new(self.my_model)
@@ -85,7 +86,7 @@ class testFileStorage(unittest.TestCase):
 
     def test_the_type_file_content(self):
         '''
-            Testing --> type of the contents inside the file.
+            testing the type of the contents inside the file.
         '''
         self.storage.save()
         self.storage.new(self.my_model)
@@ -95,10 +96,10 @@ class testFileStorage(unittest.TestCase):
 
         self.assertIsInstance(content, str)
 
-    def test_reload_withno_file(self):
+    def test_reload_without_file(self):
         '''
-            Tests; nothing happens when file.json does not exists
-            && reload is called
+            Tests that nothing happens when file.json does not exists
+            and reload is called
         '''
 
         try:
@@ -107,7 +108,21 @@ class testFileStorage(unittest.TestCase):
         except:
             self.assertTrue(False)
 
-    
+    def test_delete(self):
+        '''
+            Test delete method
+        '''
+        fs = FileStorage()
+        new_state = State()
+        fs.new(new_state)
+        state_id = new_state.id
+        fs.save()
+        fs.delete(new_state)
+        with open("file.json", encoding="UTF-8") as fd:
+            state_dict = json.load(fd)
+        for k, v in state_dict.items():
+            self.assertFalse(state_id == k.split('.')[1])
+
     def test_model_storage(self):
         '''
             Test State model in Filestorage
@@ -132,19 +147,3 @@ class testFileStorage(unittest.TestCase):
         cls_count = self.storage.count("State")
         self.assertIsInstance(cls_count, int)
         self.assertGreaterEqual(all_count, cls_count)
-        
-    def test_del(self):
-        '''
-            Test delete method
-        '''
-        fs = FileStorage()
-        new_state = State()
-        fs.new(new_state)
-        state_id = new_state.id
-        fs.save()
-        fs.delete(new_state)
-        with open("file.json", encoding="UTF-8") as fd:
-            state_dict = json.load(fd)
-        for k, v in state_dict.items():
-            self.assertFalse(state_id == k.split('.')[1])
-
